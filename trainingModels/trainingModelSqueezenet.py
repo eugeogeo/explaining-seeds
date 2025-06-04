@@ -7,7 +7,7 @@ from torch.utils.data import DataLoader
 from sklearn.model_selection import train_test_split # Not used in this version, but kept for context
 import copy
 
-base_dir = './../SOYPR'  # Altere se necessário
+base_dir = './dataset'
 train_folds = ['Fold1', 'Fold2']
 val_fold = 'Fold3'
 
@@ -127,7 +127,7 @@ for epoch in range(num_epochs):
 
 # salvar o modelo
 
-model_path = 'fine_tuned_squeezenet.pth'
+model_path = './../models/fine_tuned_squeezenet.pth'
 
 model_ft.load_state_dict(best_model_wts)
 torch.save(model_ft.state_dict(), model_path)
