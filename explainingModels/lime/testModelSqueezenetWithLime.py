@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 # parâmetros
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "fine_tuned_squeezenet.pth" # Alterado para o modelo SqueezeNet
+model_path = "./models/fine_tuned_squeezenet.pth" # Alterado para o modelo SqueezeNet
 test_dir = "./../testeImages"  # Pasta com imagens para testar
 input_size = 224 # Alterado para o tamanho de entrada da SqueezeNet
 

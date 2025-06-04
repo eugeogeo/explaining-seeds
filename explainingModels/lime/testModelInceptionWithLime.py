@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "fine_tuned_inception.pth"
+model_path = "./models/fine_tuned_inception.pth"
 test_dir = "./../testeImages"  # Pasta com imagens para testar
 input_size = 299
 

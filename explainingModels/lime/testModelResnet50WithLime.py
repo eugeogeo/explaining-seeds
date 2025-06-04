@@ -13,7 +13,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "fine_tuned_resnet.pth"  # Arquivo de pesos treinados da ResNet-50
+model_path = "./models/fine_tuned_resnet.pth"  # Arquivo de pesos treinados da ResNet-50
 test_dir = "./../testeImages"  # Pasta com imagens para testar
 input_size = 224  # Tamanho de entrada da ResNet
 

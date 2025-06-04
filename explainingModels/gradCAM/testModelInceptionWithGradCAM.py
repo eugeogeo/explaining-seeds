@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "fine_tuned_inception.pth"
+model_path = "./models/fine_tuned_inception.pth"
 test_images_dir = "./../testeImages"
 input_size = 299
 num_samples = 10  # Número máximo de imagens

@@ -25,14 +25,14 @@ num_classes = len(class_names)
 
 # --- Configurações Específicas do Modelo ---
 if MODEL_TO_USE == 'inception':
-    model_path = "fine_tuned_inception.pth"
+    model_path = "./models/fine_tuned_inception.pth"
     input_size = 299
     # Modelo Inception v3
     model = models.inception_v3(pretrained=False, aux_logits=True)
     model.fc = nn.Linear(model.fc.in_features, num_classes)
     model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, num_classes)
 elif MODEL_TO_USE == 'squeezenet':
-    model_path = "fine_tuned_squeezenet.pth"
+    model_path = "./models/fine_tuned_squeezenet.pth"
     input_size = 224
     # Modelo SqueezeNet1_0
     model = models.squeezenet1_0(pretrained=False)

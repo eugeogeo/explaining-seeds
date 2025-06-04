@@ -15,7 +15,7 @@ warnings.filterwarnings("ignore")
 
 # Parâmetros
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "fine_tuned_inception.pth"
+model_path = "./models/fine_tuned_inception.pth"
 data_dir = "./../SOYPR/Fold2"  # Fold de validação usado para testar
 input_size = 299
 num_samples = 10  # Número de imagens para testar com LIME
