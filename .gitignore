@@ -1,2 +1,4 @@
 venv/
+dataset/
+_temp_soypr_clone
 *.pth
