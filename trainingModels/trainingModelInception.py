@@ -127,7 +127,7 @@ for epoch in range(num_epochs):
 
 # salvar o modelo
 
-model_path = './../models/fine_tuned_inception.pth'
+model_path = './models/fine_tuned_inception.pth'
 
 model_ft.load_state_dict(best_model_wts)
 torch.save(model_ft.state_dict(), model_path)

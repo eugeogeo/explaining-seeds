@@ -7,7 +7,6 @@
 import os
 import subprocess
 import shutil
-from initConfig import clone_soypr_dataset
 from trainingModels import trainingModelInception
 from trainingModels import trainingModelResnet50
 from trainingModels import trainingModelSqueezenet
@@ -50,7 +49,6 @@ def main():
     action = get_user_choice()
     
     if action == "treinar":
-        clone_soypr_dataset()
         model = get_model_choice()
         train_model(model)
     elif action == "testar":
