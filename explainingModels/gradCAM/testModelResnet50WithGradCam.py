@@ -13,7 +13,8 @@ import warnings
 warnings.filterwarnings("ignore")
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "./models/fine_tuned_resnet.pth"
+# model_path = "./models/fine_tuned_resnet.pth"
+model_path = "./models/best_resnet_model.pth"
 test_images_dir = "./../testeImages"
 input_size = 224
 num_samples = 10

@@ -13,8 +13,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "./models/fine_tuned_resnet.pth"  # Arquivo de pesos treinados da ResNet-50
-test_dir = "./../testeImages"  # Pasta com imagens para testar
+# model_path = "./models/fine_tuned_resnet.pth"
+model_path = "./models/best_resnet_model.pth"
+test_dir = "./testImages"  # Pasta com imagens para testar
 input_size = 224  # Tamanho de entrada da ResNet
 
 data_transforms = transforms.Compose([
@@ -79,6 +80,15 @@ for i in range(num_samples):
     ax2.axis("off")
 
     figures.append(fig)
-    
+
+# queria aproveitar e salvar as figuras
+for idx, fig in enumerate(figures):
+    fig.savefig(f"lime_explanation_{idx + 1}.png", bbox_inches='tight')
+    plt.close(fig)
+# Exibe todas as figuras
+for fig in figures:
+    plt.figure(fig.number)
+    plt.tight_layout()
+    plt.subplots_adjust(top=0.85)    
     
 plt.show()
