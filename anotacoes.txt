@@ -1,0 +1,142 @@
+resnet 50 => epoch 32
+
+ python3 trainingModels/trainingModelResnet50.py 
+Epoch 1/200
+--------------------
+train Loss: 0.8420 Acc: 0.7157
+val Loss: 0.9074 Acc: 0.7086
+Validation loss decreased (inf --> 0.9074). Saving model...
+Epoch 2/200
+--------------------
+train Loss: 0.5678 Acc: 0.8099
+val Loss: 1.3308 Acc: 0.6176
+Early Stopping counter: 1 out of 10
+Epoch 3/200
+--------------------
+train Loss: 0.4617 Acc: 0.8432
+val Loss: 1.4330 Acc: 0.6208
+Early Stopping counter: 2 out of 10
+Epoch 4/200
+--------------------
+train Loss: 0.4114 Acc: 0.8556
+val Loss: 2.2291 Acc: 0.5488
+Early Stopping counter: 3 out of 10
+Epoch 5/200
+--------------------
+train Loss: 0.3538 Acc: 0.8801
+val Loss: 1.4852 Acc: 0.6451
+Early Stopping counter: 4 out of 10
+Epoch 6/200
+--------------------
+train Loss: 0.2959 Acc: 0.8977
+val Loss: 1.8383 Acc: 0.6326
+Early Stopping counter: 5 out of 10
+Epoch 7/200
+--------------------
+train Loss: 0.2496 Acc: 0.9137
+val Loss: 1.1556 Acc: 0.6870
+Early Stopping counter: 6 out of 10
+Epoch 8/200
+--------------------
+train Loss: 0.1472 Acc: 0.9570
+val Loss: 1.2976 Acc: 0.7119
+Early Stopping counter: 7 out of 10
+Epoch 9/200
+--------------------
+train Loss: 0.0919 Acc: 0.9755
+val Loss: 1.6866 Acc: 0.6889
+Early Stopping counter: 8 out of 10
+Epoch 10/200
+--------------------
+train Loss: 0.0719 Acc: 0.9788
+val Loss: 1.5756 Acc: 0.7092
+Early Stopping counter: 9 out of 10
+Epoch 11/200
+--------------------
+train Loss: 0.0572 Acc: 0.9843
+val Loss: 1.6952 Acc: 0.7046
+Early Stopping counter: 10 out of 10
+Early stopping triggered!
+Treinamento finalizado. Carregando o melhor modelo com val_loss: 0.9074
+Melhor modelo salvo em: ./models/fine_tuned_32_resnet_model.pth
+
+
+
+
+
+
+
+==============================================
+
+epoch => 32
+
+(venv) a2325810@poseidon:~/explaining-seeds$ python3 trainingModels/trainingModelResnet50.py 
+Epoch 1/200
+--------------------
+train Loss: 0.9601 Acc: 0.6706
+val Loss: 1.6518 Acc: 0.6280
+Validation loss decreased (inf --> 1.6518). Saving model...
+Epoch 2/200
+--------------------
+train Loss: 0.6954 Acc: 0.7536
+val Loss: 1.3744 Acc: 0.6562
+Validation loss decreased (1.6518 --> 1.3744). Saving model...
+Epoch 3/200
+--------------------
+train Loss: 0.5957 Acc: 0.7893
+val Loss: 0.9734 Acc: 0.6961
+Validation loss decreased (1.3744 --> 0.9734). Saving model...
+Epoch 4/200
+--------------------
+train Loss: 0.5143 Acc: 0.8238
+val Loss: 1.2819 Acc: 0.7112
+Early Stopping counter: 1 out of 10
+Epoch 5/200
+--------------------
+train Loss: 0.4610 Acc: 0.8395
+val Loss: 1.3742 Acc: 0.6811
+Early Stopping counter: 2 out of 10
+Epoch 6/200
+--------------------
+train Loss: 0.4195 Acc: 0.8547
+val Loss: 1.7208 Acc: 0.6680
+Early Stopping counter: 3 out of 10
+Epoch 7/200
+--------------------
+train Loss: 0.4108 Acc: 0.8550
+val Loss: 1.1648 Acc: 0.6837
+Early Stopping counter: 4 out of 10
+Epoch 8/200
+--------------------
+train Loss: 0.3319 Acc: 0.8813
+val Loss: 2.3357 Acc: 0.6365
+Early Stopping counter: 5 out of 10
+Epoch 9/200
+--------------------
+train Loss: 0.3163 Acc: 0.8931
+val Loss: 1.0437 Acc: 0.7191
+Early Stopping counter: 6 out of 10
+Epoch 10/200
+--------------------
+train Loss: 0.1834 Acc: 0.9407
+val Loss: 1.3011 Acc: 0.7269
+Early Stopping counter: 7 out of 10
+Epoch 11/200
+--------------------
+train Loss: 0.1247 Acc: 0.9606
+val Loss: 1.5620 Acc: 0.7053
+Early Stopping counter: 8 out of 10
+Epoch 12/200
+--------------------
+train Loss: 0.1044 Acc: 0.9700
+val Loss: 1.8021 Acc: 0.6876
+Early Stopping counter: 9 out of 10
+Epoch 13/200
+--------------------
+train Loss: 0.0832 Acc: 0.9761
+val Loss: 1.9776 Acc: 0.6830
+Early Stopping counter: 10 out of 10
+Early stopping triggered!
+Treinamento finalizado. Carregando o melhor modelo com val_loss: 0.9734
+Melhor modelo salvo em: ./models/fine_tuned_16_resnet_model.pth
+(venv) a2325810@poseidon:~/explaining-seeds$ 
