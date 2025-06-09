@@ -20,7 +20,7 @@ MODEL_SAVE_PATH = './models/best_resnet_model.pth' # Salvar o melhor modelo
 
 # Hiperparâmetros de Treinamento
 NUM_EPOCHS = 200  # Máximo de épocas, mas o Early Stopping provavelmente irá parar antes.
-BATCH_SIZE = 32
+BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 
 # Parâmetros de Early Stopping
