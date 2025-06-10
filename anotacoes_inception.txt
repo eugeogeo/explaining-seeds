@@ -1,0 +1,336 @@
+
+
+epoch => 64
+
+Epoch 1/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 1.4640 Acc: 0.6073
+val Loss: 0.9989 Acc: 0.6503
+Validation loss decreased (inf --> 0.9989). Saving model...
+Epoch 2/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.6526 Acc: 0.8486
+val Loss: 1.0316 Acc: 0.6994
+Early Stopping counter: 1 out of 15
+Epoch 3/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.4667 Acc: 0.8850
+val Loss: 0.9346 Acc: 0.7295
+Validation loss decreased (0.9989 --> 0.9346). Saving model...
+Epoch 4/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.3344 Acc: 0.9243
+val Loss: 0.9914 Acc: 0.7459
+Early Stopping counter: 1 out of 15
+Epoch 5/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.2862 Acc: 0.9328
+val Loss: 1.5836 Acc: 0.6817
+Early Stopping counter: 2 out of 15
+Epoch 6/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.2079 Acc: 0.9488
+val Loss: 1.0849 Acc: 0.7315
+Early Stopping counter: 3 out of 15
+Epoch 7/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.1888 Acc: 0.9555
+val Loss: 1.1170 Acc: 0.7276
+Early Stopping counter: 4 out of 15
+Epoch 8/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.1409 Acc: 0.9685
+val Loss: 1.4674 Acc: 0.6830
+Early Stopping counter: 5 out of 15
+Epoch 9/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.1441 Acc: 0.9670
+val Loss: 0.9898 Acc: 0.7656
+Early Stopping counter: 6 out of 15
+Epoch 10/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0865 Acc: 0.9821
+val Loss: 1.1436 Acc: 0.7413
+Early Stopping counter: 7 out of 15
+Epoch 11/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0671 Acc: 0.9873
+val Loss: 1.1721 Acc: 0.7341
+Early Stopping counter: 8 out of 15
+Epoch 12/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0503 Acc: 0.9903
+val Loss: 1.1132 Acc: 0.7407
+Early Stopping counter: 9 out of 15
+Epoch 13/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0485 Acc: 0.9897
+val Loss: 1.1902 Acc: 0.7302
+Early Stopping counter: 10 out of 15
+Epoch 14/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0457 Acc: 0.9918
+val Loss: 1.1718 Acc: 0.7420
+Early Stopping counter: 11 out of 15
+Epoch 15/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0420 Acc: 0.9924
+val Loss: 1.1356 Acc: 0.7479
+Early Stopping counter: 12 out of 15
+Epoch 16/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0396 Acc: 0.9939
+val Loss: 1.1463 Acc: 0.7479
+Early Stopping counter: 13 out of 15
+Epoch 17/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0403 Acc: 0.9939
+val Loss: 1.1465 Acc: 0.7446
+Early Stopping counter: 14 out of 15
+Epoch 18/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0421 Acc: 0.9933
+val Loss: 1.1894 Acc: 0.7374
+Early Stopping counter: 15 out of 15
+Early stopping triggered!
+
+Training finished. Loading best model with val_loss: 0.9346
+
+==========================================
+
+epoch => 32
+
+Epoch 1/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 1.3605 Acc: 0.6412
+val Loss: 1.0345 Acc: 0.6817
+Validation loss decreased (inf --> 1.0345). Saving model...
+Epoch 2/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.6631 Acc: 0.8392
+val Loss: 1.2635 Acc: 0.6791
+Early Stopping counter: 1 out of 15
+Epoch 3/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.4735 Acc: 0.8825
+val Loss: 0.9680 Acc: 0.7230
+Validation loss decreased (1.0345 --> 0.9680). Saving model...
+Epoch 4/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.3950 Acc: 0.9025
+val Loss: 1.0477 Acc: 0.7125
+Early Stopping counter: 1 out of 15
+Epoch 5/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.3225 Acc: 0.9219
+val Loss: 1.1926 Acc: 0.7132
+Early Stopping counter: 2 out of 15
+Epoch 6/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.2794 Acc: 0.9322
+val Loss: 1.5431 Acc: 0.6843
+Early Stopping counter: 3 out of 15
+Epoch 7/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.2401 Acc: 0.9416
+val Loss: 1.2162 Acc: 0.7046
+Early Stopping counter: 4 out of 15
+Epoch 8/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.1770 Acc: 0.9585
+val Loss: 1.0140 Acc: 0.7322
+Early Stopping counter: 5 out of 15
+Epoch 9/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.1528 Acc: 0.9603
+val Loss: 1.6647 Acc: 0.6752
+Early Stopping counter: 6 out of 15
+Epoch 10/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0996 Acc: 0.9782
+val Loss: 1.3076 Acc: 0.7040
+Early Stopping counter: 7 out of 15
+Epoch 11/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0766 Acc: 0.9830
+val Loss: 1.4033 Acc: 0.7119
+Early Stopping counter: 8 out of 15
+Epoch 12/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0616 Acc: 0.9882
+val Loss: 1.3085 Acc: 0.7263
+Early Stopping counter: 9 out of 15
+Epoch 13/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0501 Acc: 0.9912
+val Loss: 1.3101 Acc: 0.7243
+Early Stopping counter: 10 out of 15
+Epoch 14/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0458 Acc: 0.9915
+val Loss: 1.3812 Acc: 0.7236
+Early Stopping counter: 11 out of 15
+Epoch 15/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0526 Acc: 0.9909
+val Loss: 1.2724 Acc: 0.7328
+Early Stopping counter: 12 out of 15
+Epoch 16/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0501 Acc: 0.9900
+val Loss: 1.3085 Acc: 0.7210
+Early Stopping counter: 13 out of 15
+Epoch 17/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0457 Acc: 0.9912
+val Loss: 1.4081 Acc: 0.7191
+Early Stopping counter: 14 out of 15
+Epoch 18/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0488 Acc: 0.9909
+val Loss: 1.3077 Acc: 0.7263
+Early Stopping counter: 15 out of 15
+Early stopping triggered!
+
+Training finished. Loading best model with val_loss: 0.9680
+
+
+=================
+
+epoch => 16
+
+Epoch 1/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 1.2829 Acc: 0.6642
+val Loss: 0.7739 Acc: 0.7367
+Validation loss decreased (inf --> 0.7739). Saving model...
+Epoch 2/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.7013 Acc: 0.8305
+val Loss: 1.1927 Acc: 0.6732
+Early Stopping counter: 1 out of 15
+Epoch 3/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.5530 Acc: 0.8683
+val Loss: 0.9030 Acc: 0.7223
+Early Stopping counter: 2 out of 15
+Epoch 4/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.4582 Acc: 0.8889
+val Loss: 0.8451 Acc: 0.7400
+Early Stopping counter: 3 out of 15
+Epoch 5/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.3541 Acc: 0.9131
+val Loss: 1.0453 Acc: 0.7492
+Early Stopping counter: 4 out of 15
+Epoch 6/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.3052 Acc: 0.9249
+val Loss: 1.0004 Acc: 0.7361
+Early Stopping counter: 5 out of 15
+Epoch 7/200
+Current learning rate: 0.0001
+--------------------
+train Loss: 0.2840 Acc: 0.9279
+val Loss: 1.0675 Acc: 0.7407
+Early Stopping counter: 6 out of 15
+Epoch 8/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.1895 Acc: 0.9528
+val Loss: 1.0643 Acc: 0.7531
+Early Stopping counter: 7 out of 15
+Epoch 9/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.1515 Acc: 0.9673
+val Loss: 1.0716 Acc: 0.7531
+Early Stopping counter: 8 out of 15
+Epoch 10/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.1176 Acc: 0.9728
+val Loss: 1.0180 Acc: 0.7636
+Early Stopping counter: 9 out of 15
+Epoch 11/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.1050 Acc: 0.9785
+val Loss: 0.9767 Acc: 0.7760
+Early Stopping counter: 10 out of 15
+Epoch 12/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0914 Acc: 0.9812
+val Loss: 1.0549 Acc: 0.7629
+Early Stopping counter: 11 out of 15
+Epoch 13/200
+Current learning rate: 1e-05
+--------------------
+train Loss: 0.0888 Acc: 0.9812
+val Loss: 1.0520 Acc: 0.7616
+Early Stopping counter: 12 out of 15
+Epoch 14/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0812 Acc: 0.9837
+val Loss: 1.0486 Acc: 0.7623
+Early Stopping counter: 13 out of 15
+Epoch 15/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0742 Acc: 0.9858
+val Loss: 1.1265 Acc: 0.7492
+Early Stopping counter: 14 out of 15
+Epoch 16/200
+Current learning rate: 1.0000000000000002e-06
+--------------------
+train Loss: 0.0865 Acc: 0.9840
+val Loss: 1.0800 Acc: 0.7583
+Early Stopping counter: 15 out of 15
+Early stopping triggered!
+
+Training finished. Loading best model with val_loss: 0.7739
