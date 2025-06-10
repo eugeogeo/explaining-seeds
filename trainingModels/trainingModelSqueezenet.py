@@ -4,84 +4,111 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, models, transforms
 from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 import copy
+import numpy as np
 
-base_dir = './dataset'
-train_folds = ['Fold1', 'Fold2']
-val_fold = 'Fold3'
+# =============================================================================
+# 1. CENTRAL DE CONFIGURAÇÃO
+# =============================================================================
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+BASE_DIR = './dataset'
+TRAIN_FOLDS = ['Fold1', 'Fold2']
+VAL_FOLD = 'Fold3'
+MODEL_SAVE_PATH = './models/best_64_squeezenet_model_v2.pth' # <-- MODIFICAÇÃO: Novo nome para o modelo melhorado
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# --- Hiperparâmetros de Treinamento ---
+NUM_EPOCHS = 200 # Aumentado para permitir que o early stopping decida o melhor momento
+BATCH_SIZE = 64 # Reduzido para melhor generalização e menor uso de VRAM
+# <-- MODIFICAÇÃO: Reduzida a taxa de aprendizado para um ajuste mais fino.
+LEARNING_RATE = 0.0001
+# <-- MODIFICAÇÃO: Adicionado weight decay para regularização.
+WEIGHT_DECAY = 1e-4
 
-# transformações (SqueezeNet1_0 espera imagens 224x224)
+# --- Parâmetros de Early Stopping ---
+# <-- MODIFICAÇÃO: Aumentada a paciência, pois a convergência pode ser mais lenta.
+PATIENCE = 15
+# =============================================================================
+
+
+# =============================================================================
+# 2. DATA AUGMENTATION E TRANSFORMAÇÕES
+# =============================================================================
+# <-- MODIFICAÇÃO: Data Augmentation mais robusto para combater o overfitting.
 data_transforms = {
     'train': transforms.Compose([
-        transforms.Resize((224, 224)), 
-        transforms.CenterCrop(224),    
+        transforms.Resize((224, 224)),
         transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(15), # Adiciona rotações aleatórias
+        transforms.ColorJitter(brightness=0.3, contrast=0.3, saturation=0.2, hue=0.1), # Adiciona variações de cor
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
     ]),
     'val': transforms.Compose([
-        transforms.Resize((224, 224)), 
-        transforms.CenterCrop(224),    
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406],
                              [0.229, 0.224, 0.225])
     ]),
 }
+# =============================================================================
 
-# carrega os dados
+
+# Função para carregar os dados (sem alterações)
 def load_folds(folds, transform):
     datasets_list = []
     for fold in folds:
-        fold_path = os.path.join(base_dir, fold)
+        fold_path = os.path.join(BASE_DIR, fold)
         datasets_list.append(datasets.ImageFolder(fold_path, transform=transform))
     return torch.utils.data.ConcatDataset(datasets_list)
 
-# carrega dados
-train_dataset = load_folds(train_folds, data_transforms['train'])
-val_dataset = load_folds([val_fold], data_transforms['val'])
+# Carrega os dados
+train_dataset = load_folds(TRAIN_FOLDS, data_transforms['train'])
+val_dataset = load_folds([VAL_FOLD], data_transforms['val'])
 
-# loaders
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True, num_workers=4)
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False, num_workers=4)
+# Loaders
+train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, num_workers=4)
+val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False, num_workers=4)
 
-# modelo
-from torchvision.models import SqueezeNet1_0_Weights # Import SqueezeNet weights
-weights = SqueezeNet1_0_Weights.DEFAULT
-model_ft = models.squeezenet1_0(weights=weights) # Load SqueezeNet1_0
 
-# ajustar a última camada
-# a SqueezeNet tem uma camada classificadora no final
-# a última camada é um conv2d dentro do classificador
-# precisamos substituir o conv2d final do classificador
-num_classes = len(train_dataset.datasets[0].classes)  # usa o primeiro dataset para pegar as classes
+# =============================================================================
+# 3. MODIFICAÇÃO E CONFIGURAÇÃO DO MODELO
+# =============================================================================
+# Carrega o modelo SqueezeNet 1.0 pré-treinado
+weights = models.SqueezeNet1_0_Weights.DEFAULT
+model_ft = models.squeezenet1_0(weights=weights)
 
-# o classificador do SqueezeNet é um módulo sequencial
-# a última camada é um Conv2d, precisamos substituí-lo
-# o Conv2d original tem 1000 canais de saída para o ImageNet
-# nós o substituímos por um novo Conv2d com canais de saída num_classes.
+# Ajusta a camada classificadora final
+num_classes = len(train_dataset.datasets[0].classes)
+# A camada final do SqueezeNet é uma Conv2D, que substituímos para o nosso número de classes.
 model_ft.classifier[1] = nn.Conv2d(512, num_classes, kernel_size=(1,1), stride=(1,1))
-# também, mude o dropout para 0.5 conforme o artigo original do SqueezeNet
-model_ft.classifier[0].p = 0.5
-# a ativação final do SqueezeNet é um ReLU, seguido por AdaptiveAvgPool2d
-# não precisamos mudar o AdaptiveAvgPool2d
-# o modelo espera uma saída final de (batch_size, num_classes, 1, 1) que é então comprimida
+# O Dropout já faz parte da arquitetura do SqueezeNet, aqui ajustamos seu valor.
+model_ft.classifier[0].p = 0.5 # Dropout para regularização
 
-model_ft = model_ft.to(device)
+model_ft = model_ft.to(DEVICE)
 
-# otimizador e critério
+# Otimizador e critério
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model_ft.parameters(), lr=0.001)
+# <-- MODIFICAÇÃO: Otimizador Adam com a nova taxa de aprendizado e weight_decay.
+optimizer = optim.Adam(model_ft.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+# =============================================================================
 
-# treinamento
-num_epochs = 5
+
+# <-- MODIFICAÇÃO: Agendador de Taxa de Aprendizagem
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
+
+# <-- MODIFICAÇÃO: Variáveis para o Early Stopping
+min_val_loss = np.inf
+early_stopping_counter = 0
 best_model_wts = copy.deepcopy(model_ft.state_dict())
-best_acc = 0.0
 
-for epoch in range(num_epochs):
-    print(f'Epoch {epoch+1}/{num_epochs}')
+# =============================================================================
+# 4. LAÇO DE TREINAMENTO
+# =============================================================================
+for epoch in range(NUM_EPOCHS):
+    print(f'Epoch {epoch+1}/{NUM_EPOCHS}')
+    print(f'Current learning rate: {optimizer.param_groups[0]["lr"]}')
     print('-' * 20)
 
     for phase in ['train', 'val']:
@@ -96,15 +123,14 @@ for epoch in range(num_epochs):
         running_corrects = 0
 
         for inputs, labels in dataloader:
-            inputs = inputs.to(device)
-            labels = labels.to(device)
+            inputs = inputs.to(DEVICE)
+            labels = labels.to(DEVICE)
 
             optimizer.zero_grad()
 
             with torch.set_grad_enabled(phase == 'train'):
                 outputs = model_ft(inputs)
                 loss = criterion(outputs, labels)
-
                 _, preds = torch.max(outputs, 1)
 
                 if phase == 'train':
@@ -113,21 +139,37 @@ for epoch in range(num_epochs):
 
             running_loss += loss.item() * inputs.size(0)
             running_corrects += torch.sum(preds == labels.data)
-
-        epoch_loss = running_loss / len(dataloader.dataset)
-        epoch_acc = running_corrects.double() / len(dataloader.dataset)
+        
+        # Correção do cálculo da loss e acc da época para usar o tamanho correto do dataset
+        if phase == 'train':
+             epoch_loss = running_loss / len(train_dataset)
+             epoch_acc = running_corrects.double() / len(train_dataset)
+        else:
+             epoch_loss = running_loss / len(val_dataset)
+             epoch_acc = running_corrects.double() / len(val_dataset)
 
         print(f'{phase} Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
 
-        # para salvar melhor o modelo
-        if phase == 'val' and epoch_acc > best_acc:
-            best_acc = epoch_acc
-            best_model_wts = copy.deepcopy(model_ft.state_dict())
+        # <-- MODIFICAÇÃO: Lógica de Early Stopping e salvamento baseada na perda de validação
+        if phase == 'val':
+            scheduler.step(epoch_loss)
 
-# salvar o modelo
+            if epoch_loss < min_val_loss:
+                print(f'Validation loss decreased ({min_val_loss:.4f} --> {epoch_loss:.4f}). Saving model...')
+                min_val_loss = epoch_loss
+                early_stopping_counter = 0
+                best_model_wts = copy.deepcopy(model_ft.state_dict())
+            else:
+                early_stopping_counter += 1
+                print(f'Early Stopping counter: {early_stopping_counter} out of {PATIENCE}')
 
-model_path = './models/fine_tuned_squeezenet.pth'
+    # Verifica se devemos parar o treinamento
+    if early_stopping_counter >= PATIENCE:
+        print('Early stopping triggered!')
+        break
 
+# Carrega os pesos do melhor modelo e salva em disco
+print(f'\nTraining finished. Loading best model with val_loss: {min_val_loss:.4f}')
 model_ft.load_state_dict(best_model_wts)
-torch.save(model_ft.state_dict(), model_path)
-print(f'Modelo salvo em: {model_path}')
+torch.save(model_ft.state_dict(), MODEL_SAVE_PATH)
+print(f'Best model saved to: {MODEL_SAVE_PATH}')
