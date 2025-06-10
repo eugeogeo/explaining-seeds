@@ -15,11 +15,11 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 BASE_DIR = './dataset'
 TRAIN_FOLDS = ['Fold1', 'Fold2']
 VAL_FOLD = 'Fold3'
-MODEL_SAVE_PATH = './models/best_resnet_model_v2.pth' # <-- MODIFICAÇÃO: Novo nome para o modelo melhorado
+MODEL_SAVE_PATH = './models/best_16_resnet_model_v2.pth' # <-- MODIFICAÇÃO: Novo nome para o modelo melhorado
 
 # --- Hiperparâmetros de Treinamento ---
 NUM_EPOCHS = 200
-BATCH_SIZE = 64
+BATCH_SIZE = 16
 # <-- MODIFICAÇÃO: Reduzida a taxa de aprendizado para um ajuste mais fino.
 LEARNING_RATE = 0.0001
 # <-- MODIFICAÇÃO: Adicionado weight decay para regularização.
@@ -99,7 +99,7 @@ optimizer = optim.Adam(model_ft.parameters(), lr=LEARNING_RATE, weight_decay=WEI
 
 
 # Agendador de Taxa de Aprendizagem
-scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5, verbose=True)
+scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=5)
 
 # Variáveis para o Early Stopping
 min_val_loss = np.inf
