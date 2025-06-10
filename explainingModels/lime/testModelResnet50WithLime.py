@@ -16,7 +16,13 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # model_path = "./models/fine_tuned_resnet.pth"
 model_path = "./models/best_32_resnet_model_v2.pth"
 test_dir = "./testImages"  # Pasta com imagens para testar
-input_size = 224  # Tamanho de entrada da ResNet
+output_dir = "lime_results_resnet" # <-- 1. NOME DO DIRETÓRIO DE SAÍDA
+input_size = 224
+
+# --- Cria o diretório de saída se ele não existir ---
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+    print(f"Diretório '{output_dir}' criado.")
 
 data_transforms = transforms.Compose([
     transforms.Resize((input_size, input_size)),
@@ -50,15 +56,21 @@ def batch_predict(images):
 explainer = lime_image.LimeImageExplainer()
 
 image_files = [os.path.join(test_dir, f) for f in os.listdir(test_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-num_samples = len(image_files)
+
+print(f"Encontradas {len(image_files)} imagens para analisar.")
 
 figures = []
+image_filenames = []
 
-for i in range(num_samples):
+for i in range(len(image_files)):
     image_path = image_files[i]
+    image_filenames.append(os.path.basename(image_path)) # Salva o nome do arquivo original
+    
     original_image = Image.open(image_path).convert("RGB")
     np_image = np.array(original_image)
 
+    print(f"Processando imagem: {image_filenames[-1]}...")
+    
     explanation = explainer.explain_instance(
         np_image,
         batch_predict,
@@ -85,14 +97,15 @@ for i in range(num_samples):
 
     figures.append(fig)
 
-# queria aproveitar e salvar as figuras
+# --- Loop para salvar as figuras no diretório criado ---
+print("Salvando as imagens de explicação do LIME...")
 for idx, fig in enumerate(figures):
-    fig.savefig(f"lime_explanation_{idx + 1}.png", bbox_inches='tight')
-    plt.close(fig)
-# Exibe todas as figuras
-for fig in figures:
-    plt.figure(fig.number)
-    plt.tight_layout()
-    plt.subplots_adjust(top=0.85)    
+    # <-- 2. MONTA O CAMINHO COMPLETO (DIRETÓRIO + NOME DO ARQUIVO)
+    # Usei o nome do arquivo original para facilitar a identificação
+    base_filename = os.path.splitext(image_filenames[idx])[0]
+    save_path = os.path.join(output_dir, f"lime_{base_filename}.png")
     
-plt.show()
+    fig.savefig(save_path, bbox_inches='tight')
+    plt.close(fig) # Fecha a figura para liberar memória
+
+print(f"Resultados salvos em '{output_dir}'.")

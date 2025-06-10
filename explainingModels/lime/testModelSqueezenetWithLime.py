@@ -12,13 +12,19 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-# parâmetros
+# --- Parâmetros ---
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "./models/fine_tuned_squeezenet.pth" # Alterado para o modelo SqueezeNet
-test_dir = "./../testeImages"  # Pasta com imagens para testar
-input_size = 224 # Alterado para o tamanho de entrada da SqueezeNet
+model_path = "./models/best_32_squeezenet_model_v2.pth"
+test_dir = "./testImages"  # Pasta com imagens para testar
+output_dir = "lime_results_squeezenet" # <-- 1. NOME DO DIRETÓRIO DE SAÍDA
+input_size = 224
 
-# transforms
+# --- Cria o diretório de saída se ele não existir ---
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+    print(f"Diretório '{output_dir}' criado.")
+
+# --- Transforms ---
 data_transforms = transforms.Compose([
     transforms.Resize((input_size, input_size)),
     transforms.ToTensor(),
@@ -29,23 +35,16 @@ data_transforms = transforms.Compose([
 class_names = ['01_intact', '02_cercospora', '03_greenish', '04_mechanical', '05_bug', '06_dirty', '07_humidity']
 num_classes = len(class_names)
 
-
-# modelo
-# carrega o modelo SqueezeNet1_0 sem pesos pré-treinados inicialmente
+# --- Modelo SqueezeNet ---
 model = models.squeezenet1_0(pretrained=False)
-
-# ajustar a última camada para corresponder ao número de classes
 model.classifier[1] = nn.Conv2d(512, num_classes, kernel_size=(1,1), stride=(1,1))
+model.classifier[0].p = 0.5 # Dropout
 
-model.classifier[0].p = 0.5
-
-
-# carrega os pesos do modelo treinado
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
 model.eval()
 
-# função de predição para LIME
+# --- Função de predição para LIME ---
 def batch_predict(images):
     model.eval()
     batch = torch.stack([data_transforms(Image.fromarray(img)) for img in images], dim=0).to(device)
@@ -54,23 +53,26 @@ def batch_predict(images):
         probs = torch.nn.functional.softmax(outputs, dim=1)
     return probs.cpu().numpy()
 
-# inicializa o LIME
+# --- Inicializa o LIME ---
 explainer = lime_image.LimeImageExplainer()
 
-# lista com todas as imagens da pasta `testes`
+# Lista com todas as imagens da pasta
 image_files = [os.path.join(test_dir, f) for f in os.listdir(test_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
 
-# número de imagens a usar (ou todas)
-num_samples = len(image_files)
+print(f"Encontradas {len(image_files)} imagens para analisar.")
 
-# armazenar figuras
+# Armazenar figuras e nomes de arquivos
 figures = []
+image_filenames = []
 
-# loop nas imagens
-for i in range(num_samples):
+for i in range(len(image_files)):
     image_path = image_files[i]
+    image_filenames.append(os.path.basename(image_path)) # Salva o nome do arquivo original
+    
     original_image = Image.open(image_path).convert("RGB")
     np_image = np.array(original_image)
+    
+    print(f"Processando imagem: {image_filenames[-1]}...")
 
     explanation = explainer.explain_instance(
         np_image,
@@ -98,5 +100,14 @@ for i in range(num_samples):
 
     figures.append(fig)
 
-# mostrar os resultados
-plt.show()
+# --- Loop para salvar as figuras no diretório criado ---
+print("Salvando as imagens de explicação do LIME...")
+for idx, fig in enumerate(figures):
+    # <-- 2. MONTA O CAMINHO COMPLETO (DIRETÓRIO + NOME DO ARQUIVO)
+    base_filename = os.path.splitext(image_filenames[idx])[0]
+    save_path = os.path.join(output_dir, f"lime_{base_filename}.png")
+    
+    fig.savefig(save_path, bbox_inches='tight')
+    plt.close(fig) # Fecha a figura para liberar memória
+
+print(f"Resultados salvos em '{output_dir}'.")

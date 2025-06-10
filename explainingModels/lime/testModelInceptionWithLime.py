@@ -12,51 +12,73 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
+# --- Parâmetros ---
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "./models/fine_tuned_inception.pth"
-test_dir = "./../testeImages"  # Pasta com imagens para testar
+model_path = "./models/best_16_inception_model_v2.pth"
+test_dir = "./testImages"  # Pasta com imagens para testar
+output_dir = "lime_results_inception" # <-- 1. NOME DO DIRETÓRIO DE SAÍDA
 input_size = 299
 
+# --- Cria o diretório de saída se ele não existir ---
+if not os.path.exists(output_dir):
+    os.makedirs(output_dir)
+    print(f"Diretório '{output_dir}' criado.")
+
+# --- Transforms ---
 data_transforms = transforms.Compose([
     transforms.Resize((input_size, input_size)),
     transforms.ToTensor(),
-    transforms.Normalize([0.485, 0.456, 0.406], 
+    transforms.Normalize([0.485, 0.456, 0.406],
                          [0.229, 0.224, 0.225])
 ])
 
 class_names = ['01_intact', '02_cercospora', '03_greenish', '04_mechanical', '05_bug', '06_dirty', '07_humidity']
 num_classes = len(class_names)
 
-
+# --- Modelo Inception ---
 model = models.inception_v3(pretrained=False, aux_logits=True)
-model.fc = nn.Linear(model.fc.in_features, num_classes)
+num_ftrs = model.fc.in_features
+model.fc = nn.Sequential(
+    nn.Dropout(p=0.5, inplace=True),
+    nn.Linear(num_ftrs, num_classes)
+)
 model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, num_classes)
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
 model.eval()
 
+# --- Função de predição para LIME ---
 def batch_predict(images):
     model.eval()
     batch = torch.stack([data_transforms(Image.fromarray(img)) for img in images], dim=0).to(device)
     with torch.no_grad():
         outputs = model(batch)
+        # O Inception v3 com aux_logits retorna uma tupla durante a avaliação
         if isinstance(outputs, tuple):
             outputs = outputs[0]
         probs = torch.nn.functional.softmax(outputs, dim=1)
     return probs.cpu().numpy()
 
+# --- Inicializa o LIME ---
 explainer = lime_image.LimeImageExplainer()
 
+# Lista com todas as imagens da pasta
 image_files = [os.path.join(test_dir, f) for f in os.listdir(test_dir) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
 
-num_samples = len(image_files)
+print(f"Encontradas {len(image_files)} imagens para analisar.")
 
+# Armazenar figuras e nomes de arquivos
 figures = []
+image_filenames = []
 
-for i in range(num_samples):
+for i in range(len(image_files)):
     image_path = image_files[i]
+    image_filenames.append(os.path.basename(image_path)) # Salva o nome do arquivo original
+
     original_image = Image.open(image_path).convert("RGB")
     np_image = np.array(original_image)
+    
+    print(f"Processando imagem: {image_filenames[-1]}...")
 
     explanation = explainer.explain_instance(
         np_image,
@@ -84,4 +106,14 @@ for i in range(num_samples):
 
     figures.append(fig)
 
-plt.show()
+# --- Loop para salvar as figuras no diretório criado ---
+print("Salvando as imagens de explicação do LIME...")
+for idx, fig in enumerate(figures):
+    # <-- 2. MONTA O CAMINHO COMPLETO (DIRETÓRIO + NOME DO ARQUIVO)
+    base_filename = os.path.splitext(image_filenames[idx])[0]
+    save_path = os.path.join(output_dir, f"lime_{base_filename}.png")
+    
+    fig.savefig(save_path, bbox_inches='tight')
+    plt.close(fig) # Fecha a figura para liberar memória
+
+print(f"Resultados salvos em '{output_dir}'.")
