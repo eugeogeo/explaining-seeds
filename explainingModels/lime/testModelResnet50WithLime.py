@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 # model_path = "./models/fine_tuned_resnet.pth"
-model_path = "./models/best_resnet_model.pth"
+model_path = "./models/best_32_resnet_model_v2.pth"
 test_dir = "./testImages"  # Pasta com imagens para testar
 input_size = 224  # Tamanho de entrada da ResNet
 
@@ -29,7 +29,11 @@ class_names = ['01_intact', '02_cercospora', '03_greenish', '04_mechanical', '05
 num_classes = len(class_names)
 
 model = models.resnet50(pretrained=False)
-model.fc = nn.Linear(model.fc.in_features, num_classes)  # Adapta a última camada
+num_ftrs = model.fc.in_features
+model.fc = nn.Sequential(
+    nn.Dropout(p=0.5, inplace=True),
+    nn.Linear(num_ftrs, num_classes)
+)
 
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.to(device)
