@@ -18,9 +18,9 @@ warnings.filterwarnings("ignore")
 
 # --- Configurações ---
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-model_path = "./models/fine_tuned_inception.pth"
-test_images_dir = "./../testeImages"
-output_dir = "inception_gradcam_results" # Pasta para salvar os resultados
+model_path = "./models/best_16_inception_model_v2.pth"
+test_images_dir = "./testImages"
+output_dir = "gradcam_result_inception" # Pasta para salvar os resultados
 input_size = 299  # Tamanho de entrada correto para InceptionV3
 num_samples = 10
 
@@ -36,7 +36,11 @@ num_classes = len(class_names)
 
 # --- Carregar Modelo InceptionV3 ---
 model = models.inception_v3(pretrained=False, aux_logits=True)
-model.fc = nn.Linear(model.fc.in_features, num_classes)
+num_ftrs = model.fc.in_features
+model.fc = nn.Sequential(
+    nn.Dropout(p=0.5, inplace=True),
+    nn.Linear(num_ftrs, num_classes)
+)
 model.AuxLogits.fc = nn.Linear(model.AuxLogits.fc.in_features, num_classes)
 
 model.load_state_dict(torch.load(model_path, map_location=device))

@@ -95,7 +95,7 @@ def generate_gradcam_figure(image, image_path):
     return fig
 
 # ... (o laço principal para salvar as figuras permanece o mesmo) ...
-output_dir = "gradcam_results_improved"
+output_dir = "gradcam_result_resnet"
 os.makedirs(output_dir, exist_ok=True)
 print(f"Os resultados do Grad-CAM melhorado serão salvos na pasta: {output_dir}")
 

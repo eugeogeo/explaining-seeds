@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model_path = "./models/best_32_squeezenet_model_v2.pth"
 test_images_dir = "./testImages"  # Mantido o seu caminho
-output_dir = "squeezenet_gradcam_results" # Pasta para salvar os resultados
+output_dir = "gradcam_result_squeezenet" # Pasta para salvar os resultados
 input_size = 224
 num_samples = 10
 
